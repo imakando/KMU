@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Admin & Supervisor System (Firebase Enabled)</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docx@8.0.1/build/index.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <div class="system-panel" id="system-health" style="display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:0.5rem;">
+        <span class="text-neon-yellow">SYSTEM HEALTH: </span>
+        <span class="text-neon-green" id="health-status">Checking...</span>
+    </div>
+    <div class="system-panel login-card" id="login-screen">
+        <h1 class="text-neon-green text-3xl font-bold mb-4 text-center">ACCESS TERMINAL</h1>
+        <p class="text-center text-neon-green mb-4" id="welcome-message"></p>
+        <div class="btn-group text-center">
+            <button class="btn-primary" id="show-admin-login-btn">ADMIN LOGIN</button>
+            <button class="btn-success" id="show-supervisor-login-btn">SUPERVISOR LOGIN</button>
+        </div>
+        <form id="admin-login-form" style="display:none;" class="mt-4">
+            <h2 class="text-neon-blue text-center mb-4">Admin Login</h2>
+            <label class="text-neon-blue">Email:</label>
+            <input type="email" id="admin-login-email" placeholder="Enter your email" required>
+            <label class="text-neon-blue">Password:</label>
+            <input type="password" id="admin-login-password" placeholder="Enter your password" required>
+            <button type="submit" class="btn-primary">Login</button>
+        </form>
+        <form id="supervisor-login-form" style="display:none;" class="mt-4">
+            <h2 class="text-neon-green text-center mb-4">Supervisor Login</h2>
+            <label class="text-neon-green">Email:</label>
+            <input type="email" id="supervisor-login-email" placeholder="Enter your email" required>
+            <label class="text-neon-green">Password:</label>
+            <input type="password" id="supervisor-login-password" placeholder="Enter your password" required>
+            <button type="submit" class="btn-success">Login</button>
+        </form>
+    </div>
+    
+    <div id="admin-dashboard" style="display:none;">
+        <div class="system-panel" style="display: flex; justify-content: space-between; align-items: center;">
+            <h1 class="text-neon-blue text-3xl font-bold">ADMIN DASHBOARD</h1>
+            <button class="btn-danger logout-btn">LOGOUT</button>
+        </div>
+        
+        <div class="system-panel mt-4 flex flex-wrap gap-2">
+            <button class="btn-primary" data-target="station-status-section">Station Status</button>
+            <button class="btn-primary" data-target="admin-chat-section">Chat</button>
+            <button class="btn-primary" data-target="reports-section">Activity & Reports</button>
+            <button class="btn-primary" data-target="analytics-section">Analytics</button>
+            <button class="btn-primary back-to-top-btn" style="margin-left: auto;">Back to Top</button>
+        </div>
+
+        <div class="system-panel mt-4" id="station-status-section">
+            <h2 class="text-neon-blue text-2xl font-bold mb-4">STATION STATUS</h2>
+            <div class="grid-container" id="stations-grid"></div>
+        </div>
+        
+        <div class="system-panel mt-4" id="admin-chat-section">
+            <h2 class="text-neon-blue text-2xl font-bold mb-4">CHAT WITH SUPERVISORS <span class="blinking-dot" id="admin-chat-notification" style="display:none;"></span></h2>
+            <div class="chat-container" id="admin-chat-box"></div>
+            <form id="admin-chat-form">
+                <textarea id="admin-chat-input" placeholder="Type your message..." required></textarea>
+                <button class="btn-primary" type="submit">Send</button>
+            </form>
+        </div>
+        
+        <div class="system-panel mt-4" id="reports-section">
+            <h2 class="text-neon-blue text-2xl font-bold mb-4">SYSTEM ACTIVITY & REPORTS</h2>
+            <div class="report-section">
+                <table id="audit-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>User ID</th>
+                            <th>Role</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="audit-body"></tbody>
+                </table>
+                <div style="margin-top: 10px;">
+                    <button class="btn-success" id="download-report-pdf-btn">Download PDF Report</button>
+                    <button class="btn-primary" id="download-report-docx-btn">Download Word Report</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="system-panel mt-4" id="analytics-section">
+            <h2 class="text-neon-blue text-2xl font-bold mb-4">ANALYTICS & CHARTS</h2>
+            <div class="chart-container">
+                <h3 class="text-neon-yellow mb-2">Daily Station Assignments</h3>
+                <canvas id="daily-assignments-chart"></canvas>
+            </div>
+            <div class="chart-container mt-4">
+                <h3 class="text-neon-yellow mb-2">Peak Usage Hours</h3>
+                <canvas id="peak-hours-chart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div id="supervisor-dashboard" style="display:none;">
+        <div class="system-panel" style="display: flex; justify-content: space-between; align-items: center;">
+            <h1 class="text-neon-green text-3xl font-bold">SUPERVISOR DASHBOARD</h1>
+            <button class="btn-danger logout-btn">LOGOUT</button>
+        </div>
+
+        <div class="system-panel mt-4 flex flex-wrap gap-2">
+            <button class="btn-success" data-target="kiosk-lock-system-section">Kiosk Lock System</button>
+            <button class="btn-success" data-target="supervisor-chat-section">Chat with Admin</button>
+            <button class="btn-success back-to-top-btn" style="margin-left: auto;">Back to Top</button>
+        </div>
+
+        <div class="system-panel mt-4" id="kiosk-lock-system-section">
+            <h2 class="text-neon-green text-2xl font-bold mb-4">KIOSK LOCK SYSTEM</h2>
+            <form id="student-lookup-form" class="mt-4">
+                <label class="text-neon-green">Enter Student ID:</label>
+                <input type="text" id="student-lookup-id" placeholder="e.g., UMB12345" required>
+                <button type="submit" class="btn-success">Fetch Details</button>
+            </form>
+            
+            <div id="student-details-card" class="system-panel" style="display:none; margin-top:1rem;">
+                <h3 class="text-neon-yellow">Student Details</h3>
+                <p><strong>Name:</strong> <span id="fetched-student-name"></span></p>
+                <p><strong>ID:</strong> <span id="fetched-student-id"></span></p>
+                <p><strong>Program:</strong> <span id="fetched-student-program"></span></p>
+                <p><strong>Hostel:</strong> <span id="fetched-student-hostel"></span></p>
+                <p><strong>Year:</strong> <span id="fetched-student-year"></span></p>
+                
+                <h3 class="text-neon-yellow" style="margin-top:1rem;">Assign Station</h3>
+                <label class="text-neon-green" for="station-select">Available Stations:</label>
+                <select id="station-select"></select>
+                <button id="assign-and-generate-key-btn" class="btn-primary">Generate Session Key</button>
+                <p id="assignment-message" class="text-neon-red"></p>
+                <div id="generated-key-display" class="system-panel" style="display:none; text-align:center; font-size:1.5rem; margin-top:1rem;">
+                    <p>Session Key:</p>
+                    <strong class="text-neon-yellow" id="generated-key"></strong>
+                </div>
+            </div>
+        </div>
+        
+        <div class="system-panel mt-4" id="supervisor-chat-section">
+            <h2 class="text-neon-green text-2xl font-bold mb-4">CHAT WITH ADMIN</h2>
+            <div class="chat-container" id="supervisor-chat-box"></div>
+            <form id="supervisor-chat-form">
+                <textarea id="supervisor-chat-input" placeholder="Type your message..." required></textarea>
+                <button class="btn-success" type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="toast" class="toast" style="display:none;"></div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module" src="firebase-config.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>

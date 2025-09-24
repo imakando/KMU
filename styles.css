@@ -1,0 +1,285 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+/* --- Global Styles & Dark Mode (Default) --- */
+body {
+    font-family: 'Roboto Mono', monospace;
+    background-color: #1a1a1a;
+    color: #00ff00;
+    padding: 2rem;
+    box-sizing: border-box;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.system-panel {
+    background-color: #000000;
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 10px #00ff00;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 6px;
+    animation: terminalGlow 2s infinite alternate;
+}
+
+.login-card {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+input, select, textarea {
+    background-color: #0d0d0d;
+    border: 1px solid #00ff00;
+    color: #00ff00;
+    padding: 0.75rem;
+    width: 100%;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    box-shadow: inset 0 0 5px #00ff0080;
+    box-sizing: border-box;
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    box-shadow: 0 0 10px #00ff00, inset 0 0 5px #00ff00;
+}
+
+button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    filter: brightness(1.2);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.btn-primary { background-color: #00aaff; color: #000000; border-color: #00aaff; }
+.btn-success { background-color: #00cc00; color: #000000; border-color: #00cc00; }
+.btn-warning { background-color: #ffff33; color: #000000; border-color: #ffff33; }
+.btn-danger { background-color: #ff3333; color: #000000; border-color: #ff3333; }
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.flex-container {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.flex-container > div {
+    flex: 1;
+    min-width: 400px;
+}
+
+.chat-container {
+    height: 300px;
+    overflow-y: auto;
+    border: 1px dashed #00ff00;
+    padding: 1rem;
+    background-color: #050505;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    animation: pulseBorder 3s infinite;
+}
+
+.chat-message {
+    max-width: 75%;
+    padding: 0.5rem;
+    border: 1px solid;
+    margin-bottom: 5px;
+    border-radius: 8px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.chat-message.admin {
+    align-self: flex-end;
+    background-color: rgba(0, 170, 255, 0.2);
+    border-color: #00aaff;
+}
+
+.chat-message.supervisor {
+    align-self: flex-start;
+    background-color: rgba(0, 204, 0, 0.2);
+    border-color: #00cc00;
+}
+
+.station-card {
+    border: 1px dashed #00ff00;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 6px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.station-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+}
+
+.station-card.occupied {
+    border-color: #ff3333;
+    background-color: rgba(255, 51, 51, 0.1);
+}
+
+.station-card.unoccupied {
+    border-color: #00cc00;
+    background-color: rgba(0, 204, 0, 0.1);
+}
+
+.station-card.needs-maintenance {
+    border-color: #ffff33;
+    background-color: rgba(255, 255, 51, 0.1);
+}
+
+.text-danger { color: #ff6666; }
+.text-neon-blue { color: #00aaff; }
+.text-neon-green { color: #00ff00; }
+.text-neon-red { color: #ff3333; }
+.text-neon-yellow { color: #ffff33; }
+
+.blinking-dot {
+    height: 10px;
+    width: 10px;
+    background-color: #ff3333;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 5px;
+    animation: blink 1s linear infinite;
+}
+
+#audit-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+#audit-table th, #audit-table td {
+    border: 1px solid #00ff00;
+    padding: 8px;
+    text-align: left;
+}
+
+.password-strength {
+    font-size: 0.8rem;
+    margin-top: -0.5rem;
+    margin-bottom: 0.5rem;
+    text-align: left;
+}
+
+.password-strength.weak { color: #ff3333; }
+.password-strength.medium { color: #ffff33; }
+.password-strength.strong { color: #00cc00; }
+
+.kiosk-card {
+    background-color: #000000;
+    border: 1px solid #00ff00;
+    padding: 1rem;
+    text-align: center;
+}
+
+/* --- Light Mode --- */
+.light-mode body {
+    background: #f7f7f7;
+    color: #111;
+}
+
+.light-mode .system-panel {
+    background: #ffffff;
+    border-color: #222;
+    box-shadow: none;
+    animation: none;
+}
+
+.light-mode input, .light-mode select, .light-mode textarea {
+    background: #fff;
+    color: #000;
+    border-color: #333;
+    box-shadow: none;
+}
+
+.light-mode button.btn-primary { background: #0077ff; color: #fff; border-color: #005bbb; }
+.light-mode button.btn-success { background: #28a745; color: #fff; border-color: #28a745; }
+.light-mode button.btn-warning { background: #ffc107; color: #000; border-color: #ffc107; }
+.light-mode button.btn-danger { background: #dc3545; color: #fff; border-color: #dc3545; }
+
+.light-mode .chat-container {
+    border: 1px dashed #333;
+    background: #fff;
+    animation: none;
+}
+
+.light-mode .chat-message.admin {
+    background-color: rgba(0, 119, 255, 0.1);
+    border-color: #0077ff;
+}
+
+.light-mode .chat-message.supervisor {
+    background-color: rgba(40, 167, 69, 0.1);
+    border-color: #28a745;
+}
+
+.light-mode .station-card {
+    border-color: #333;
+    box-shadow: none;
+}
+
+.light-mode .station-card.occupied {
+    border-color: #dc3545;
+    background-color: #ffe5e5;
+}
+
+.light-mode .station-card.unoccupied {
+    border-color: #28a745;
+    background-color: #e6ffe6;
+}
+
+.light-mode .station-card.needs-maintenance {
+    border-color: #ffc107;
+    background-color: #ffffe6;
+}
+
+.light-mode #audit-table th, .light-mode #audit-table td {
+    border-color: #333;
+}
+
+.light-mode .kiosk-card {
+    background-color: #fff;
+    border-color: #333;
+}
+
+/* --- Keyframe Animations --- */
+@keyframes terminalGlow {
+    from { box-shadow: 0 0 5px #00ff00; }
+    to { box-shadow: 0 0 15px #00ff00; }
+}
+
+@keyframes pulseBorder {
+    0% { border-color: #00ff00; }
+    50% { border-color: rgba(0, 255, 0, 0.5); }
+    100% { border-color: #00ff00; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
